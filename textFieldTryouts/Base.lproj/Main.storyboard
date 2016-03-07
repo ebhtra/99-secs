@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6211" systemVersion="14A298i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6204"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="textFieldTryouts" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
@@ -15,11 +16,80 @@
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" usesAttributedText="YES" borderStyle="roundedRect" minimumFontSize="14" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="lQa-Fo-XCn">
+                                <rect key="frame" x="150" y="46" width="300" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="Wlg-k1-hMk"/>
+                                    <constraint firstAttribute="height" constant="30" id="zou-0X-uMc"/>
+                                </constraints>
+                                <attributedString key="attributedText">
+                                    <fragment content="antidisestablishmentarianism">
+                                        <attributes>
+                                            <color key="NSColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                            <font key="NSFont" size="12" name="IowanOldStyle-Roman"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" minimumFontSize="7" translatesAutoresizingMaskIntoConstraints="NO" id="avc-dZ-OGW">
+                                <rect key="frame" x="200" y="111" width="200" height="200"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="8Xp-6W-CFP"/>
+                                    <constraint firstAttribute="height" constant="200" id="TM0-M7-ryC"/>
+                                    <constraint firstAttribute="width" constant="200" id="Y0a-Hm-jy3"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="IowanOldStyle-Roman" family="Iowan Old Style" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time left: 99" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YIk-jL-u5E">
+                                <rect key="frame" x="240" y="353" width="120" height="30"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="FRu-pG-zxS"/>
+                                    <constraint firstAttribute="width" constant="120" id="e44-gm-PJK"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Score:  0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KPh-oY-YZZ">
+                                <rect key="frame" x="250" y="425" width="100" height="30"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="hff-RT-2KW"/>
+                                    <constraint firstAttribute="height" constant="30" id="mb8-tJ-ky4"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="0.77045454550000003" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="centerX" secondItem="lQa-Fo-XCn" secondAttribute="centerX" id="1Hp-J4-kjj"/>
+                            <constraint firstItem="KPh-oY-YZZ" firstAttribute="top" secondItem="YIk-jL-u5E" secondAttribute="bottom" constant="42" id="8RL-fl-uFa"/>
+                            <constraint firstItem="avc-dZ-OGW" firstAttribute="centerX" secondItem="lQa-Fo-XCn" secondAttribute="centerX" id="Pam-jr-ReB"/>
+                            <constraint firstItem="YIk-jL-u5E" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="fgJ-NI-vVh"/>
+                            <constraint firstItem="avc-dZ-OGW" firstAttribute="top" secondItem="lQa-Fo-XCn" secondAttribute="bottom" constant="35" id="hg6-gX-1zL"/>
+                            <constraint firstItem="YIk-jL-u5E" firstAttribute="top" secondItem="avc-dZ-OGW" secondAttribute="bottom" constant="42" id="pLF-GP-QHf"/>
+                            <constraint firstItem="lQa-Fo-XCn" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="26" id="sfO-H0-vYx"/>
+                            <constraint firstItem="KPh-oY-YZZ" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="y7m-xY-Mno"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="infoLabel" destination="avc-dZ-OGW" id="DBb-oq-E0L"/>
+                        <outlet property="scoreLabel" destination="KPh-oY-YZZ" id="1TZ-QT-NYe"/>
+                        <outlet property="textViewer" destination="lQa-Fo-XCn" id="j6z-z3-n2t"/>
+                        <outlet property="timerLabel" destination="YIk-jL-u5E" id="l0r-k6-fXO"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="260" y="403"/>
         </scene>
     </scenes>
 </document>
