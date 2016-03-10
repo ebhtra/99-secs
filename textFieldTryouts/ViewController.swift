@@ -8,8 +8,9 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITextFieldDelegate {
+class ViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource {
 
+    @IBOutlet weak var scoreTable: UITableView!
     @IBOutlet weak var textViewer: UITextField!
     @IBOutlet weak var infoLabel: UILabel!
     
@@ -23,6 +24,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
     let prompt = "Tap here to begin"
     let nextWord = "Tap here for next word"
     let info = "Tap on the \"word\" when you know what letter isn't in it.\nThen type that letter and hit the return key."
+    
+    // initial settings for game play
     var puzzle = ""
     var solution = ""
     var bonusPts = 0
@@ -30,16 +33,29 @@ class ViewController: UIViewController, UITextFieldDelegate {
     var timer = NSTimer()
     var paused = true
     var score = 0
+    var needToShowOfflineAlert = true  // flag to store whether alert has been shown already
+    
+    var topScores = [(String, Int, String)]()  // Use these tuples to store score GETs from Parse
+    var lowHigh: Int!  // the 10th highest score, for checking against new potential high scores
+    var nextToFall: String! // the Parse objID of the lowest high score, for eminent deletion
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        scoreTable.hidden = true
         view.backgroundColor = UIColor.greenColor()
         textViewer.text = prompt
+        
         buildRandomWord()
+        
         textViewer.delegate = self
     }
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
+        refreshHighs()  // GET the latest high scores from Parse
+        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("hideWord"), name: UIApplicationDidEnterBackgroundNotification, object: nil)
        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("unhideWord"), name: UIApplicationDidBecomeActiveNotification, object: nil)
@@ -50,12 +66,40 @@ class ViewController: UIViewController, UITextFieldDelegate {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationDidBecomeActiveNotification, object: nil)
     }
     
-    // unhide word if hidden
+    func refreshHighs() {
+        
+        ParseClient.sharedInstance.getHighScores() { result, error in
+            if let _ = error {
+                if self.needToShowOfflineAlert {
+                    // only show this alert once until network connection is re-established
+                    self.needToShowOfflineAlert = false
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.displayGenericAlert(error!, message: "You won't be able to see the leaderboard, and your scores won't qualify for it.")
+                    }
+                }
+            } else {
+                self.topScores = result!
+                
+                dispatch_async(dispatch_get_main_queue()) {
+                    
+                    self.scoreTable.reloadData()
+                }
+                // store the info from the lowest high score in case it needs to be replaced soon
+                self.lowHigh = self.topScores[9].1
+                self.nextToFall = self.topScores[9].2
+                // since network connection is intact, reset the alert flag for if it's broken again
+                self.needToShowOfflineAlert = true
+            }
+        }
+    }
+    
+    // unhide word if hidden, in response to NotificationCenter
     func unhideWord() {
         textViewer.hidden = false
     }
     
-    // hide word to thwart cheaters
+    // hide word to thwart cheaters, in response to NotificationCenter
     func hideWord() {
         textViewer.hidden = true
     }
@@ -70,14 +114,28 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 view.backgroundColor = UIColor.magentaColor()
             }
             if secs == 0 {
+                
+                refreshHighs()
+                 
                 view.backgroundColor = UIColor.cyanColor()
                 buildRandomWord()
                 timer.invalidate()
                 paused = true
                 secs = 99
-                score = 0
                 infoLabel.text = ""
+                scoreTable.hidden = false
                 textViewer.text = gameOver
+                
+                // modally present a screen to add user's name to high scoreboard if she scores in top ten
+                if let _ = lowHigh {
+                    if score > lowHigh {
+                        let vc = storyboard?.instantiateViewControllerWithIdentifier("HighScoreVC") as! HighScoreEditorVC
+                        vc.theScore = score
+                        vc.beaten = nextToFall
+                        
+                        presentViewController(vc, animated: true, completion: nil)
+                    }
+                }
             }
         }
     }
@@ -117,20 +175,24 @@ class ViewController: UIViewController, UITextFieldDelegate {
         puzzle = word
         solution = answer
     }
-    //If the "Begin" prompt is showing, display the puzzle and directions in its place.  start timer.
+    //If the "Begin" prompt is showing, display the puzzle and directions in its place.  Start timer.
     //If GAME OVER msg is showing, replace it with Begin prompt and set up new puzzle
     func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
         if textViewer.text == prompt {
             timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("countdown"), userInfo: nil, repeats: true)
             
             startPlay()
+            scoreTable.hidden = true
+            
             return false
         }
         
         if textViewer.text == gameOver {
             textViewer.text = prompt
+            timerLabel.text = "Time left:  99"
             score = 0
             scoreLabel.text = "Score:  0"
+            
             return false
         }
         
@@ -170,8 +232,26 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
         buildRandomWord()
     }
-    //TODO:
-   
-    // persist top scores on separate screen or
+    // UITableView methods
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return topScores.count
+    }
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
+        let scoreCell = tableView.dequeueReusableCellWithIdentifier("highScoreCell")! as UITableViewCell
+        let score = topScores[indexPath.row]
+        scoreCell.textLabel!.text = "\(score.1)"
+        scoreCell.detailTextLabel?.text = "\(score.0)"
+        scoreCell.detailTextLabel?.textColor = UIColor.whiteColor()
+        scoreCell.textLabel?.textColor = UIColor.whiteColor()
+        
+        return scoreCell
+    }
+    // UIAlert method
+    func displayGenericAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
 }
 
